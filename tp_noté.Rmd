@@ -1,0 +1,54 @@
+---
+title: "tp_noté"
+date: "2024-11-29"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+---
+
+
+```{r}
+library(readr)
+library(dplyr)
+library(ggplot2)
+```
+
+# lecture de notre fonction R qui lit les 60 fichiers 
+
+```{r}
+lire_60_fichiers<-function(chemin,date_debut="2020-01-01",date_fin="2022-12-31"){
+  fichiers=list.files(chemin,pattern="\\.csv$",full.names = T)
+  data<-fichiers %>% 
+       lapply(read.csv) %>% 
+       bind_rows() %>%
+       mutate(date = as.Date(date)) %>%
+       filter(date >= date_debut & date <= date_fin)
+  return(data)
+    
+}
+data=lire_60_fichiers("/home/UCA/pmfall/ventes_papa")
+data
+```
+
+```{r}
+library(ggplot2)
+
+# Visualisation des ventes
+visualiser_ventes <- function(data) {
+  ggplot(data, aes(x = date, y = nb_de_ventes)) +
+    geom_line(color = "blue") +
+    labs(
+      title = "Évolution des ventes de FXD JET 100",
+      x = "Date",
+      y = "Nombre de ventes",
+      caption = "Données entre 2020-01-01 et 2024-12-31 traitées par les étudiants en deuxème année SD"
+    ) +
+    theme_minimal()
+}
+visualiser_ventes(data)
+
+"IL EST À NOTER QUE J'AI TRAVAILLÉ EN ME BASANT SUR LE PROJET DES RÉALISÉ PAR DES ÉTUDIANTS DE ENSEA"
+```
+
